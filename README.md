@@ -16,7 +16,7 @@ For example, `<the number of toto>` is `1075`.
 
 `https://localhost:8080/?id=<the number of toto>`
 
-![image](https://user-images.githubusercontent.com/28561230/54176124-e0fbde80-44d0-11e9-89ee-e8e4fc0176b0.png)
+![image](https://user-images.githubusercontent.com/28561230/54176173-21f3f300-44d1-11e9-93a1-2ed9547065f7.png)
 
 - Press INPUT
 
