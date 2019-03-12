@@ -66,7 +66,7 @@ def create_input_form(thtml, flag, now):
     btag['name'] = 'post_value'
     btag['onclick'] = "location.href='/{}?id={}'".format(flag, now)
     btag['value'] = 'SAVE'
-    soup.table.wrap(soup.new_tag('form', action= '/' + flag, method='post'))
+    soup.table.wrap(soup.new_tag('form', action= '/{}?id={}'.format(flag, now), method='post'))
     soup.form.append(btag)
     return soup.prettify()
 
