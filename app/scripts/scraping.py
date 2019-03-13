@@ -66,7 +66,7 @@ def get_match_info(toto):
     toto : game info pandas
     """
     rows = []
-    url = 'https://soccer.yahoo.co.jp/jleague/'
+    url = 'https://soccer.yahoo.co.jp/jleague/league/'
     r = requests.get(url + 'j1')
     soup = BeautifulSoup(r.text, "html.parser")
     rows += soup.tbody.find_all("tr")
@@ -76,6 +76,10 @@ def get_match_info(toto):
     r = requests.get(url + 'j3')
     soup = BeautifulSoup(r.text, "html.parser")
     rows += soup.tbody.find_all("tr")
+    r = requests.get(url + 'yn')
+    soup = BeautifulSoup(r.text, "html.parser")
+    for tbody in soup.find_all("tbody"):
+        rows += tbody.find_all("tr")
 
     score = []
     status = []
@@ -84,9 +88,10 @@ def get_match_info(toto):
             atag = row.find_all("a")
             home = atag[1].get_text()
             if home == toto['home'][t]:
-                score.append(row.find("td", class_="score").find('a').get_text())
-                status.append(row.find("td", class_="score").find('small').get_text())
-                break
+                if atag[4].get_text() == toto['away'][t]:
+                    score.append(row.find("td", class_="score").find('a').get_text())
+                    status.append(row.find("td", class_="score").find('small').get_text())
+                    break
     toto["score"] = score
     toto["status"] = status
     result = []
