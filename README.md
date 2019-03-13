@@ -22,7 +22,7 @@ For example, `<the number of toto>` is `1075`.
 
 -> go to the input form for your prediction.
 
-![image](https://user-images.githubusercontent.com/28561230/54176218-5667af00-44d1-11e9-8886-c0477893d308.png)
+![image](https://user-images.githubusercontent.com/28561230/54271434-d7ec3980-45c4-11e9-914e-8e3b020176e1.png)
 
 - Press SAVE
 
