@@ -134,7 +134,7 @@ def cat_pred(toto, pred_list):
     toto["match"] = match
     n_match = str(toto["match"].sum()) + '/' + str(len(toto["match"]))
     toto["match"] = toto["match"].map(match_dict)
-    toto = toto.loc[:, ['home', 'score', 'away', 'result', 'prediction', 'match']]
+    toto = toto.loc[:, ['home', 'score', 'away', 'status', 'result', 'prediction', 'match']]
     return toto, n_match
 
 if __name__ == '__main__':
