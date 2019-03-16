@@ -90,7 +90,7 @@ def get_match_info(toto):
             if home == toto['home'][t]:
                 if atag[4].get_text() == toto['away'][t]:
                     score.append(row.find("td", class_="score").find('a').get_text())
-                    status.append(row.find("td", class_="score").find('small').get_text())
+                    status.append(row.find('small', class_="status").get_text())
                     break
     toto["score"] = score
     toto["status"] = status
