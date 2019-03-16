@@ -50,8 +50,8 @@ def create_input_form(thtml, flag, now):
     rows = soup.find_all("tr")
     for i in range(1, len(rows)):
         tds = rows[i].find_all("td")
-        pre = tds[4].string
-        tds[4].string = ''
+        pre = tds[5].string
+        tds[5].string = ''
         for s in ['1', '0', '2']:
             if s in pre:
                 input_tag = soup.new_tag('input', type='checkbox', value=s, checked=True)
@@ -59,7 +59,7 @@ def create_input_form(thtml, flag, now):
                 input_tag = soup.new_tag('input', type='checkbox', value=s)
             input_tag['name'] = 'in' + str(i)
             input_tag.string = s
-            tds[4].append(input_tag)
+            tds[5].append(input_tag)
 
     btag = soup.new_tag('button')
     btag.string = 'SAVE'
