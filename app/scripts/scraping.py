@@ -25,39 +25,37 @@ def get_toto_info(flag, now):
     home_team = []
     away_team = []
     if flag in toto_type:
-        n_game = {'toto' : 13, 'minitoto': 5}
-        url = 'http://sport-kuji.toto-dream.com/dci/I/IPA/IPA01.do?op=disptotoLotInfo&holdCntId=' + now
+        tototag = {'toto':'tabCont01', 'minitotoA':'tabCont06', 'minitotoB':'tabCont07'}
+        n_game = {'toto':13, 'minitotoA':5, 'minitotoB':5}
+        url = 'https://sp.toto-dream.com/dcs/subos/screen/si01/ssin026/PGSSIN02601InittotoSP.form?holdCntId=' + now
         r = requests.get(url)
         soup = BeautifulSoup(r.text, "html.parser")
-        rows = soup.find_all('tr')
-        for nr in range(len(rows)):
+        tab = soup.find('div', id=tototag[flag])
+        rows = tab.find_all('tr')
+        for nr in range(4, 4+n_game[flag]):
             tds = rows[nr].find_all('td')
-            if tds:
-                text = tds[0].get_text().replace(' ', '').replace('\n', '').replace('\r', '')
-                segment = re.findall(r'[a-zA-Z]+', text)
-                if ''.join(segment) == flag:
-                    for i in range(nr+6, nr+6+n_game[segment[0]]):
-                        tds = rows[i].find_all('td')
-                        home = zenhan.z2h(tds[4].get_text())
-                        away = zenhan.z2h(tds[6].get_text())
-                        home_team.append(team_name[home] if home in team_name.keys() else home)
-                        away_team.append(team_name[away] if away in team_name.keys() else away)
-                    break
+            teams = tds[3].get_text().replace(' ', '').replace('\r\n', '').replace('\u3000', '').split('VS')
+            home = zenhan.z2h(teams[0])
+            away = zenhan.z2h(teams[1])
+            home_team.append(team_name[home] if home in team_name.keys() else home)
+            away_team.append(team_name[away] if away in team_name.keys() else away)
     elif flag in big_type:
         bignum = {'BIG':'09', 'HyakuenBig':'13', 'BIG1000':'11', 'miniBIG':'10'}
-        url = 'http://sport-kuji.toto-dream.com/dci/I/IPA/IPA02.do?op=dispBIGLotAssignGameDetail&popupDispDiv=0&holdCntId=' + now + '&bigLotInfoCommodityId=&commodityId='
+        n_game = {'BIG':14, 'HyakuenBig':14, 'BIG1000':11, 'miniBIG':9}
+        url = 'https://sp.toto-dream.com/_xs2_/dcs/subos/screen/si02/ssin000/PGSSIN00001InitGameBIGSP.form?holdCntId=' + now + '&commodityId='
         r = requests.get(url + bignum[flag])
         soup = BeautifulSoup(r.text, "html.parser")
         rows = soup.find_all('tr')
-        for i in range(5, len(rows)):
-            tds = rows[i].find_all('td')
-            home = zenhan.z2h(tds[4].get_text())
-            away = zenhan.z2h(tds[6].get_text())
+        for nr in range(4, 4+n_game[flag]):
+            tds = rows[nr].find_all('td')
+            home = zenhan.z2h(tds[3].get_text())
+            away = zenhan.z2h(tds[5].get_text())
             home_team.append(team_name[home] if home in team_name.keys() else home)
             away_team.append(team_name[away] if away in team_name.keys() else away)
-
     data = {'home' : home_team, 'away' : away_team}
+    dict_team = {'F東京' : "FC東京", '横浜M' : "横浜FM"}
     df = pd.DataFrame(data)
+    df = df.replace(dict_team)
     return df
 
 def get_match_info(toto):
@@ -69,7 +67,8 @@ def get_match_info(toto):
     url = 'https://soccer.yahoo.co.jp/jleague/league/'
     r = requests.get(url + 'j1')
     soup = BeautifulSoup(r.text, "html.parser")
-    rows += soup.tbody.find_all("tr")
+    for tbody in soup.find_all("tbody"):
+        rows += tbody.find_all("tr", {'class':'last'})
     r = requests.get(url + 'j2')
     soup = BeautifulSoup(r.text, "html.parser")
     rows += soup.tbody.find_all("tr")
@@ -80,18 +79,20 @@ def get_match_info(toto):
     soup = BeautifulSoup(r.text, "html.parser")
     for tbody in soup.find_all("tbody"):
         rows += tbody.find_all("tr")
-
     score = []
     status = []
+    homes = []
     for t in range(len(toto)):
         for row in rows:
             atag = row.find_all("a")
-            home = atag[1].get_text()
-            if home == toto['home'][t]:
-                if atag[4].get_text() == toto['away'][t]:
-                    score.append(row.find("td", class_="score").find('a').get_text())
-                    status.append(row.find('small', class_="status").get_text())
-                    break
+            if len(atag) > 1:
+                home = atag[1].get_text()
+                if home == toto['home'][t]:
+                    if atag[4].get_text() == toto['away'][t]:
+                        homes.append(home)
+                        score.append(row.find("td", class_="score").find('a').get_text().replace('\xa0', ''))
+                        status.append(row.find('small', class_="status").get_text())
+                        break
     toto["score"] = score
     toto["status"] = status
     result = []

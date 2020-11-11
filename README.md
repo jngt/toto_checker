@@ -12,7 +12,7 @@ Run the python scripts.
 
 Input URL as below
 
-`https://localhost:8080/?id=<the number of toto>`
+`http://localhost:8080/?id=<the number of toto>`
 
 ![image](https://user-images.githubusercontent.com/28561230/54271390-c0ad4c00-45c4-11e9-818d-cd143356bebc.png)
 

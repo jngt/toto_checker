@@ -9,21 +9,21 @@ import requests
 def create_home(now):
     """
     link to each active toto page
-    now : home many times
+    now : how many times
     out : html
     """
     toto_type = ['toto', 'minitotoA', 'minitotoB']
     big_type = ['BIG', 'HyakuenBig', 'BIG1000', 'miniBIG']
     big_name = ['BIG', '100円BIG', 'BIG1000', 'miniBIG']
     # toto
-    r = requests.get('http://sport-kuji.toto-dream.com/dci/I/IPA/IPA01.do?op=disptotoLotInfo&holdCntId=' + now)
+    r = requests.get('https://store.toto-dream.com/dcs/subos/screen/pi01/spin000/PGSPIN00001DisptotoLotInfo.form?holdCntId=' + now)
     soup = BeautifulSoup(r.text, "html.parser")
     index = []
     for tt in range(len(toto_type)):
         if soup.find('a', href="#{}".format(toto_type[tt])):
             index.append(tt)
     # BIG
-    r = requests.get('http://sport-kuji.toto-dream.com/dci/I/IPA/IPA02.do?op=dispBIGLotInfo&holdCntId=' + now)
+    r = requests.get('https://store.toto-dream.com/dcs/subos/screen/pi02/spin004/PGSPIN00401DispBIGLotInfo.form?holdCntId=' + now)
     soup = BeautifulSoup(r.text, "html.parser")
     for bt in range(len(big_type)):
         if soup.find('a', href="#{}".format(big_type[bt])):
@@ -75,7 +75,7 @@ def create_view_form(thtml, flag, n_match, now):
     create view page after save
     flag : type of toto
     n_match : '{}/{}'
-    now : home many times
+    now : how many times
     out : html
     """
     soup = BeautifulSoup(thtml, "html.parser")
